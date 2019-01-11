@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Downloads/Compressed/openjfx-11.0.1_linux-x64_bin-sdk/javafx-sdk-11.0.1/lib" />
+      <root url="jar://$USER_HOME$/Downloads/Programs/jfoenix-9.0.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$USER_HOME$/Downloads/Compressed/openjfx-11.0.1_linux-x64_bin-sdk/javafx-sdk-11.0.1/lib" />
+    </NATIVE>
+    <SOURCES>
+      <root url="file://$USER_HOME$/Downloads/Compressed/openjfx-11.0.1_linux-x64_bin-sdk/javafx-sdk-11.0.1/lib" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Downloads/Compressed/openjfx-11.0.1_linux-x64_bin-sdk/javafx-sdk-11.0.1/lib" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/Compressed/openjfx-11.0.1_linux-x64_bin-sdk/javafx-sdk-11.0.1/lib" recursive="false" type="SOURCES" />
+  </library>
+</component>
