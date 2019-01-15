@@ -33,6 +33,15 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        String imagePath = Paths.get("src/sample/user_image.png").toAbsolutePath().toString();
+        Image i = null;
+        try {
+            i = new Image(new FileInputStream(getClass().getResource("user_image.png").getPath()));
+            circle_userImage.setFill(new ImagePattern(i));
+            System.out.println(imagePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         label_username.setText(Main.name);
         list_Files.setCellFactory(param -> new FileListCell());
     }

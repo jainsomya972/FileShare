@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -26,9 +27,10 @@ class FileListCell extends ListCell<String>
         super();
         btn.setText("remove");
         fileName.setFont(Font.font(16));
+        fileName.setPadding(new Insets(0,0,0,10));
         iconView = new ImageView();
-        iconView.setFitHeight(25);
-        iconView.setFitWidth(25);
+        iconView.setFitHeight(35);
+        iconView.setFitWidth(35);
         hbox.getChildren().addAll(iconView,fileName,pane);
         hbox.setHgrow(pane, Priority.ALWAYS);
     }
@@ -40,7 +42,7 @@ class FileListCell extends ListCell<String>
         setGraphic(null);
         if(name!=null && !empty)
         {
-            fileName.setText(name);
+            fileName.setText(name.replace(".dir",""));
             setGraphic(hbox);
             try {
                 Image image = getFileIcon(name);
@@ -70,12 +72,16 @@ class FileListCell extends ListCell<String>
             iconName = "imageFile.png";
         }
         //video files
-        else if(ext.equals("mp4") || ext.equals("mpv") || ext.equals("avi") || ext.equals("3gp"))
+        else if(ext.equals("mp4") || ext.equals("mkv") || ext.equals("avi") || ext.equals("3gp") || ext.equals("wmv"))
         {
             iconName = "videoFile.png";
         }
+        else if(ext.equals("mp3") || ext.equals("aac") || ext.equals("flac") || ext.equals("m4a") || ext.equals("wav"))
+        {
+            iconName = "audioFile.png";
+        }
         //zip file
-        else if(ext.equals("zip") || ext.equals("rar") || ext.equals("gz") || ext.equals("xz"))
+        else if(ext.equals("zip") || ext.equals("rar") || ext.equals("gz") || ext.equals("xz") || ext.equals("jar"))
         {
             iconName = "zipFile.png";
         }
@@ -93,6 +99,20 @@ class FileListCell extends ListCell<String>
         else if(ext.equals("xls") || ext.equals("xlsx") || ext.equals("odt"))
         {
             iconName = "excelFile.png";
+        }
+        //bin file
+        else if(ext.equals("exe") || ext.equals("bin") || ext.equals("apk") || ext.equals("dll"))
+        {
+            iconName = "binFile.png";
+        }
+        //iso file
+        else if(ext.equals("iso"))
+        {
+            iconName = "isoFile.png";
+        }
+        else if(ext.equals("dir"))
+        {
+            iconName = "folder.png";
         }
         System.out.println("Name : " +  name);
         System.out.println("ext : " +  ext);
