@@ -32,16 +32,9 @@ public class MainController {
     private AnchorPane anchorPane_base;
 
     @FXML
-    public void initialize() throws FileNotFoundException {
+    public void initialize() {
         label_username.setText(Main.name);
-        list_Files.setCellFactory(param -> {
-            try {
-                return new FileListCell();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            }
-        });
+        list_Files.setCellFactory(param -> new FileListCell());
     }
 
     @FXML
