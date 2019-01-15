@@ -3,6 +3,9 @@ package sample;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -48,6 +51,20 @@ public class NewUserDialogController {
         writer.println(email);
         writer.println(imagePath);
         writer.close();
+
+        Main.name = name;
+        Main.email = email;
+        Main.profileImage = imagePath;
+
+        try {
+            Parent root;
+            root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+            Main.stage.setTitle("FileJet - Home");
+            Main.stage.setScene(new Scene(root, 800, 600));
+            Main.stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -96,7 +113,7 @@ public class NewUserDialogController {
         }
 
 
-        imagePath = Paths.get("user_image.png").toAbsolutePath().toString();
+        imagePath = Paths.get("src/sample/user_image.png").toAbsolutePath().toString();
         Image i = null;
         try {
             i = new Image(new FileInputStream(getClass().getResource("user_image.png").getPath()));
