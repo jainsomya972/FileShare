@@ -3,6 +3,9 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,6 +15,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -88,6 +92,20 @@ public class MainController {
     @FXML
     private void Button_Send_Click(ActionEvent event){
         System.out.println("Send Clicked!");
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("discovery.fxml"));
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("Available Devices");
+            primaryStage.setScene(new Scene(root, 400, 250));
+            /*primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);*/
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private List<File> enlistFolder(File folder)

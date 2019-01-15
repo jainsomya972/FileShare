@@ -6,24 +6,27 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CyclicBarrier;
 
-public class ScanNetwork implements Runnable{
+public class ScanNetwork implements Callable {
 
-    public List<String> foundiplist;
+    public volatile List<String> foundiplist;
     private int port;
-    CyclicBarrier barrier;
+    //CyclicBarrier barrier;
 
     @Override
-    public void run() {
-        checkip();
+    public List<String> call() {
+        foundiplist=checkip();
+        //System.out.println("list being returned : " + foundiplist.toArray()[0]);
+        return foundiplist;
     }
 
     public ScanNetwork(int port)
     {
         foundiplist = new ArrayList<>();
         this.port = port;
-        barrier = new CyclicBarrier(2);
+        //barrier = new CyclicBarrier(1);
     }
 
     public List<String> getListOfIPsFromNIs() throws SocketException {
@@ -46,8 +49,8 @@ public class ScanNetwork implements Runnable{
         return addrList;
     }
 
-    public void checkip(){
-        List<String> foundiplist = new ArrayList<>();
+    public List<String> checkip(){
+        List<String> list = new ArrayList<>();
         try {
             for(String ip : getListOfIPsFromNIs()) {
                 String lastOctet = ip.split("\\.")[ip.split("\\.").length - 1];
@@ -63,7 +66,7 @@ public class ScanNetwork implements Runnable{
                             socket.connect(new InetSocketAddress(itrip, port), 4);
                             socket.close();
                             System.out.println("\nip : " + itrip);
-                            foundiplist.add(itrip);
+                            list.add(itrip);
                         } catch (IOException e) {
                             //e.printStackTrace();
                         }
@@ -73,5 +76,6 @@ public class ScanNetwork implements Runnable{
         } catch (SocketException e) {
             e.printStackTrace();
         }
+        return list;
     }
 }
