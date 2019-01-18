@@ -1,4 +1,4 @@
-package sample;
+package App.java;
 
 import java.io.IOException;
 import java.net.*;
@@ -9,23 +9,25 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CyclicBarrier;
 
-public class ScanNetwork implements Callable {
+public class ScanNetwork implements Runnable {
 
-    public volatile List<String> foundiplist;
+    public List<String> foundiplist;
     private int port;
+    DiscoveryDialogController discoveryDialogController;
     //CyclicBarrier barrier;
 
     @Override
-    public List<String> call() {
+    public void run() {
         foundiplist=checkip();
+        discoveryDialogController.OnScanCompletion(foundiplist);
         //System.out.println("list being returned : " + foundiplist.toArray()[0]);
-        return foundiplist;
     }
 
-    public ScanNetwork(int port)
+    public ScanNetwork(int port, DiscoveryDialogController discoveryDialogController)
     {
         foundiplist = new ArrayList<>();
         this.port = port;
+        this.discoveryDialogController = discoveryDialogController;
         //barrier = new CyclicBarrier(1);
     }
 
@@ -63,7 +65,7 @@ public class ScanNetwork implements Callable {
                         System.out.print(".");
                         Socket socket = new Socket();
                         try {
-                            socket.connect(new InetSocketAddress(itrip, port), 4);
+                            socket.connect(new InetSocketAddress(itrip, port), 8);
                             socket.close();
                             System.out.println("\nip : " + itrip);
                             list.add(itrip);

@@ -1,4 +1,4 @@
-package sample;
+package App.java;
 
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
@@ -58,7 +58,7 @@ public class NewUserDialogController {
 
         try {
             Parent root;
-            root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/App/fxml/main.fxml"));
             Main.stage.setTitle("FileJet - Home");
             Main.stage.setScene(new Scene(root, 800, 600));
             Main.stage.show();
@@ -101,25 +101,18 @@ public class NewUserDialogController {
         File image =  fileChooser.showOpenDialog(Main.stage);
         Path source = Paths.get(String.valueOf(image)); //original file
         System.out.println(source);
-        Path target = Paths.get("src/sample/");
+        Path target = Paths.get("src/App/");
 
         Path t = target.resolve("user_image.png");// create new path ending with `name` content
 
-
-        try {
-            Files.copy(source, t, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        imagePath = Paths.get("src/sample/user_image.png").toAbsolutePath().toString();
         Image i = null;
         try {
-            i = new Image(new FileInputStream(getClass().getResource("user_image.png").getPath()));
+            Files.copy(source, t, StandardCopyOption.REPLACE_EXISTING);
+            imagePath = Paths.get("src/App/user_image.png").toAbsolutePath().toString();
+            i = new Image(new FileInputStream(getClass().getResource("/App/user_image.png").getPath()));
             circle_image.setFill(new ImagePattern(i));
             System.out.println(imagePath);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

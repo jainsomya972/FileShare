@@ -1,4 +1,4 @@
-package sample;
+package App.java;
 
 import java.io.IOException;
 import java.net.*;
@@ -11,7 +11,7 @@ public class test {
         List<String> ips = getListOfIPsFromNIs();
         for(String ip : ips)
         {
-            checkip(ip, 80);
+            checkip(ip, 9090);
         }
     }
 

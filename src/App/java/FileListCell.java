@@ -1,4 +1,4 @@
-package sample;
+package App.java;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -117,6 +117,6 @@ class FileListCell extends ListCell<String>
         System.out.println("Name : " +  name);
         System.out.println("ext : " +  ext);
         System.out.println("iconName : " +  iconName);
-        return new Image(new FileInputStream(getClass().getResource(iconName).getPath()));
+        return new Image(new FileInputStream(getClass().getResource("/App/images/" + iconName).getPath()));
     }
 }

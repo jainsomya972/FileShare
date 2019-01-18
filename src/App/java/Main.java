@@ -1,4 +1,4 @@
-package sample;
+package App.java;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -13,12 +13,14 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.net.ServerSocket;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class Main extends Application {
 
     public static Stage stage;
+    public static ServerSocket discoverySocket;
     public static String name = "Abhay";
     public static String email = "jainsomya972@gmail.com";
     public static String profileImage;
@@ -26,6 +28,7 @@ public class Main extends Application {
     public static String sendType = "files";// can be files or folder
     @Override
     public void start(Stage primaryStage) throws Exception{
+        discoverySocket = new ServerSocket(6700);
         File userFile = new File(Paths.get("config.txt").toString());
         BufferedReader reader = null;
         Parent root;
@@ -34,10 +37,11 @@ public class Main extends Application {
             name = reader.readLine();
             email = reader.readLine();
             profileImage = reader.readLine();
-            root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+            System.out.println(getClass().getResource("/App/fxml/main.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/App/fxml/main.fxml"));
         }
         else
-            root = FXMLLoader.load(getClass().getResource("new_user_dialog.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/App/fxml/new_user_dialog.fxml"));
 
         stage = primaryStage;
         primaryStage.setTitle("Hello World");

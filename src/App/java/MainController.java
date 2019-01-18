@@ -1,4 +1,4 @@
-package sample;
+package App.java;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,8 +16,11 @@ import javafx.scene.shape.Path;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import com.jfoenix.controls.JFXToggleButton;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -33,14 +36,14 @@ public class MainController {
     @FXML
     private Button button_send;
     @FXML
-    private AnchorPane anchorPane_base;
+    private JFXToggleButton toggleButton_discoverable;
 
     @FXML
     public void initialize() {
-        String imagePath = Paths.get("src/sample/user_image.png").toAbsolutePath().toString();
+        String imagePath = Paths.get("/App/images/user_image.png").toAbsolutePath().toString();
         Image i = null;
         try {
-            i = new Image(new FileInputStream(getClass().getResource("user_image.png").getPath()));
+            i = new Image(new FileInputStream(getClass().getResource("/App/images/user_image.png").getPath()));
             circle_userImage.setFill(new ImagePattern(i));
             System.out.println(imagePath);
         } catch (FileNotFoundException e) {
@@ -94,10 +97,11 @@ public class MainController {
         System.out.println("Send Clicked!");
         Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("discovery.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/App/fxml/discovery.fxml"));
             Stage primaryStage = new Stage();
+            primaryStage.initStyle(StageStyle.UTILITY);
             primaryStage.setTitle("Available Devices");
-            primaryStage.setScene(new Scene(root, 400, 250));
+            primaryStage.setScene(new Scene(root, 350, 450));
             /*primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);*/
             primaryStage.show();
@@ -142,6 +146,22 @@ public class MainController {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void ToggleButton_Discoverable_Click(ActionEvent event) {
+        try {
+            if (toggleButton_discoverable.isSelected() && Main.discoverySocket.isClosed()){
+                System.out.println("Socket opened!!");
+                Main.discoverySocket = new ServerSocket(6700);
+            }
+            else if (!Main.discoverySocket.isClosed()) {
+                Main.discoverySocket.close();
+                System.out.println("Socket closed!!");
+            }
+        }catch(IOException e){
+                e.printStackTrace();
         }
     }
 }
