@@ -26,9 +26,10 @@ public class DiscoveryClient implements Runnable{
     @Override
     public void run() {
         //Server is running always. This is done using this while(true) loop
-        if(!socket.isClosed()) {
+
             while (true) {
                 //Reading the message from the client
+                if(!socket.isClosed()) {
                 try {
                     fromClient = socket.accept();
                     InputStream is = fromClient.getInputStream();
