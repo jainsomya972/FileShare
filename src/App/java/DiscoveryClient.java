@@ -1,5 +1,9 @@
 package App.java;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,9 +16,9 @@ public class DiscoveryClient implements Runnable{
     private static int port;
 
     public DiscoveryClient(int port, String name){
+        this.name=name;
+        this.port = port;
         try{
-            this.name=name;
-            this.port = port;
             socket = new ServerSocket(port);
         }catch (Exception e){
             e.printStackTrace();
@@ -35,19 +39,10 @@ public class DiscoveryClient implements Runnable{
                     InputStream is = fromClient.getInputStream();
                     InputStreamReader isr = new InputStreamReader(is);
                     BufferedReader br = new BufferedReader(isr);
-                    String number = br.readLine();
-                    System.out.println("Message received from client is " + number);
+                    String inputMessage = br.readLine();
+                    HandleInputMessage(inputMessage);
 
-                    String returnMessage;
-                    returnMessage = Main.name + "\n";
 
-                    //Sending the response back to the client.
-                    OutputStream os = fromClient.getOutputStream();
-                    OutputStreamWriter osw = new OutputStreamWriter(os);
-                    BufferedWriter bw = new BufferedWriter(osw);
-                    bw.write(returnMessage);
-                    System.out.println("Message sent to the client is " + returnMessage);
-                    bw.flush();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -76,6 +71,62 @@ public class DiscoveryClient implements Runnable{
             }
         }
 
+    }
+    private void HandleInputMessage(String inputMessage) throws IOException {
+
+        System.out.println("Message received from client is " + inputMessage);
+
+
+        if(inputMessage.equals("getname"))
+        {
+            String returnMessage = "unknown";
+            returnMessage = Main.name + "\n";
+            //Sending the response back to the client.
+            OutputStream os = fromClient.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+            bw.write(returnMessage);
+            System.out.println("Message sent to the client is " + returnMessage);
+            bw.flush();
+        }
+        else if(inputMessage.contains("receiveconfirm"))
+        {
+            String name = inputMessage.split(" ")[1];
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    String returnMessage = "unknown";
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                            name + " is sending some Files, do you want to receive it?",
+                            ButtonType.YES, ButtonType.NO);
+                    alert.showAndWait();
+                    if(alert.getResult() == ButtonType.YES)
+                        returnMessage = "yes" + "\n";
+                    else
+                        returnMessage = "no" + "\n";
+                    OutputStream os = null;
+                    try {
+                        os = fromClient.getOutputStream();
+                        OutputStreamWriter osw = new OutputStreamWriter(os);
+                        BufferedWriter bw = new BufferedWriter(osw);
+                        bw.write(returnMessage);
+                        System.out.println("Message sent to the client is " + returnMessage);
+                        bw.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        }
+        else if(inputMessage.equals("filetransfer"))
+        {
+
+        }
+        else if(inputMessage.equals("foldertransfer"))
+        {
+
+        }
     }
 
     /*public static boolean ServerSocketIsClosed(){
