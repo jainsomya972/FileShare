@@ -88,7 +88,7 @@ public class ScanNetwork implements Runnable {
     }
 
     public List<String> changeIPtoName(List<String> iplist){
-        List<String> ipnamelist=null;
+        List<String> ipnamelist=new ArrayList<>();
         Socket sendToServer=null;
         for(String ip: iplist){
             try {
