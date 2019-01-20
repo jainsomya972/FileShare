@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Callable;
@@ -24,11 +26,17 @@ public class DiscoveryDialogController {
     @FXML
     private JFXButton button_send;
 
+    private List<String> ips = new ArrayList<>();
+    private List<String> users = new ArrayList<>();
+    private String nameSelected;
+    private List<File> fileToSend;
+    private int port=6700;
+
     @FXML
     public  void initialize(){
         progressIndicator.setVisible(true);
         button_send.setDisable(true);
-        ScanNetwork scan = new ScanNetwork(6700,this);
+        ScanNetwork scan = new ScanNetwork(port,this);
         Thread t = new Thread(scan);
         t.start();
         ListViewSelected();
@@ -38,13 +46,28 @@ public class DiscoveryDialogController {
     public void Button_Refresh_Click(){
         progressIndicator.setVisible(true);
         button_send.setDisable(true);
-        ScanNetwork scan = new ScanNetwork(6700,this);
+        ScanNetwork scan = new ScanNetwork(port,this);
         Thread t = new Thread(scan);
         t.start();
     }
 
     @FXML
     public void Button_Send_Click(){
+        int index=users.indexOf(nameSelected);
+        String selectedIP = ips.get(index);
+        System.out.println("Selected IP: "+selectedIP);
+        fileToSend = Main.fileList;
+        String message="receiveconfirm "+Main.name+"\n";
+        String receivedMessage = SendFile(selectedIP,message);
+        if(receivedMessage.equals("yes")){
+            for(File f:fileToSend){
+                SendFile(selectedIP,f);
+            }
+        }
+        else{
+            System.out.println("Files will not transfer. Denied by user.");
+        }
+
 
     }
 
@@ -52,7 +75,9 @@ public class DiscoveryDialogController {
 
     }
 
-    public void OnScanCompletion(List<String> users) {
+    public void OnScanCompletion(List<String> users,List<String> ips) {
+        this.ips = ips;
+        this.users = users;
         listView_Discovery.setItems(FXCollections.observableList(users));
         progressIndicator.setVisible(false);
     }
@@ -62,9 +87,71 @@ public class DiscoveryDialogController {
             @Override
             public void changed(ObservableValue ip, Object oldValue, Object newValue) {
                 button_send.setDisable(false);
-                System.out.println("ip selected= "+(String)newValue);
+                nameSelected=(String)newValue;
             }
         });
+    }
+
+    private void SendFile(String receiver,File f){
+        Socket sendToServer=null;
+        try {
+            sendToServer = new Socket(receiver,port);
+            //Send the message to the server
+            OutputStream os = sendToServer.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+
+            String sendMessage = f.getName() + "\n";
+            bw.write(sendMessage);
+            bw.flush();
+            System.out.println("Message sent to the server : "+sendMessage);
+
+
+
+            //Get the return message from the server
+            InputStream is = sendToServer.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String message = br.readLine();
+            System.out.println("Message received from the server : " +message);
+            sendToServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String SendFile(String receiver,String m){
+        Socket sendToServer=null;
+        String message;
+        try {
+            sendToServer = new Socket(receiver,port);
+            //Send the message to the server
+            OutputStream os = sendToServer.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+
+            bw.write(m);
+            bw.flush();
+            System.out.println("Message sent to the server : "+m);
+
+
+
+            //Get the return message from the server
+            InputStream is = sendToServer.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            message = br.readLine();
+            System.out.println("Message received from the server : " +message);
+            sendToServer.close();
+            return message;
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "no";
     }
 
 }

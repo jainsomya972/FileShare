@@ -21,12 +21,8 @@ public class ScanNetwork implements Runnable {
     public void run() {
         foundiplist=checkip();
         foundnamelist=changeIPtoName(foundiplist);
-        if(foundnamelist==null){
-            discoveryDialogController.OnScanCompletion(foundiplist);
-        }
-        else{
-            discoveryDialogController.OnScanCompletion(foundnamelist);
-        }
+        discoveryDialogController.OnScanCompletion(foundnamelist,foundiplist);
+
 
         //System.out.println("list being returned : " + foundiplist.toArray()[0]);
     }
@@ -92,13 +88,13 @@ public class ScanNetwork implements Runnable {
         Socket sendToServer=null;
         for(String ip: iplist){
             try {
-                sendToServer = new Socket(ip,6700);
+                sendToServer = new Socket(ip,port);
                 //Send the message to the server
                 OutputStream os = sendToServer.getOutputStream();
                 OutputStreamWriter osw = new OutputStreamWriter(os);
                 BufferedWriter bw = new BufferedWriter(osw);
 
-                String sendMessage = Main.name + "\n";
+                String sendMessage = "getname" + "\n";
                 bw.write(sendMessage);
                 bw.flush();
                 System.out.println("Message sent to the server : "+sendMessage);
@@ -112,21 +108,11 @@ public class ScanNetwork implements Runnable {
                 String message = br.readLine();
                 System.out.println("Message received from the server : " +message);
                 ipnamelist.add(message);
+                sendToServer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            finally
-            {
-                //Closing the socket
-                try
-                {
-                    sendToServer.close();
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
+
         }
 
 
