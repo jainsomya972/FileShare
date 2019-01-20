@@ -101,15 +101,15 @@ public class NewUserDialogController {
         File image =  fileChooser.showOpenDialog(Main.stage);
         Path source = Paths.get(String.valueOf(image)); //original file
         System.out.println(source);
-        Path target = Paths.get("src/App/");
+        Path target = Paths.get("src/App/images/");
 
         Path t = target.resolve("user_image.png");// create new path ending with `name` content
 
         Image i = null;
         try {
             Files.copy(source, t, StandardCopyOption.REPLACE_EXISTING);
-            imagePath = Paths.get("src/App/user_image.png").toAbsolutePath().toString();
-            i = new Image(new FileInputStream(getClass().getResource("/App/user_image.png").getPath()));
+            imagePath = Paths.get("src/App/images/user_image.png").toAbsolutePath().toString();
+            i = new Image(new FileInputStream(getClass().getResource("/App/images/user_image.png").getPath()));
             circle_image.setFill(new ImagePattern(i));
             System.out.println(imagePath);
         } catch (IOException e) {

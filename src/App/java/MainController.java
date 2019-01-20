@@ -151,17 +151,15 @@ public class MainController {
 
     @FXML
     private void ToggleButton_Discoverable_Click(ActionEvent event) {
-        try {
-            if (toggleButton_discoverable.isSelected() && Main.discoverySocket.isClosed()){
+
+            if (toggleButton_discoverable.isSelected()){
                 System.out.println("Socket opened!!");
-                Main.discoverySocket = new ServerSocket(6700);
+                Main.discoveryClient.OpenServerSocket();
             }
-            else if (!Main.discoverySocket.isClosed()) {
-                Main.discoverySocket.close();
+            else {
+                Main.discoveryClient.CloseServerSocket();
                 System.out.println("Socket closed!!");
             }
-        }catch(IOException e){
-                e.printStackTrace();
-        }
+
     }
 }

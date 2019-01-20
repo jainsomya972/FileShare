@@ -1,6 +1,6 @@
 package App.java;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -12,6 +12,7 @@ import java.util.concurrent.CyclicBarrier;
 public class ScanNetwork implements Runnable {
 
     public List<String> foundiplist;
+    public List<String> foundnamelist;
     private int port;
     DiscoveryDialogController discoveryDialogController;
     //CyclicBarrier barrier;
@@ -19,7 +20,14 @@ public class ScanNetwork implements Runnable {
     @Override
     public void run() {
         foundiplist=checkip();
-        discoveryDialogController.OnScanCompletion(foundiplist);
+        foundnamelist=changeIPtoName(foundiplist);
+        if(foundnamelist==null){
+            discoveryDialogController.OnScanCompletion(foundiplist);
+        }
+        else{
+            discoveryDialogController.OnScanCompletion(foundnamelist);
+        }
+
         //System.out.println("list being returned : " + foundiplist.toArray()[0]);
     }
 
@@ -62,12 +70,10 @@ public class ScanNetwork implements Runnable {
                     String i_string = Integer.toString(i);
                     if (!i_string.equals(lastOctet)) {
                         String itrip = remainingip + i_string;
-                        System.out.print(".");
                         Socket socket = new Socket();
                         try {
                             socket.connect(new InetSocketAddress(itrip, port), 8);
                             socket.close();
-                            System.out.println("\nip : " + itrip);
                             list.add(itrip);
                         } catch (IOException e) {
                             //e.printStackTrace();
@@ -79,5 +85,51 @@ public class ScanNetwork implements Runnable {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public List<String> changeIPtoName(List<String> iplist){
+        List<String> ipnamelist=null;
+        Socket sendToServer=null;
+        for(String ip: iplist){
+            try {
+                sendToServer = new Socket(ip,6700);
+                //Send the message to the server
+                OutputStream os = sendToServer.getOutputStream();
+                OutputStreamWriter osw = new OutputStreamWriter(os);
+                BufferedWriter bw = new BufferedWriter(osw);
+
+                String sendMessage = Main.name + "\n";
+                bw.write(sendMessage);
+                bw.flush();
+                System.out.println("Message sent to the server : "+sendMessage);
+
+
+
+                //Get the return message from the server
+                InputStream is = sendToServer.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String message = br.readLine();
+                System.out.println("Message received from the server : " +message);
+                ipnamelist.add(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally
+            {
+                //Closing the socket
+                try
+                {
+                    sendToServer.close();
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        return ipnamelist;
     }
 }

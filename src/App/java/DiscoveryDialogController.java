@@ -1,6 +1,8 @@
 package App.java;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -29,6 +31,7 @@ public class DiscoveryDialogController {
         ScanNetwork scan = new ScanNetwork(6700,this);
         Thread t = new Thread(scan);
         t.start();
+        ListViewSelected();
     }
 
     @FXML
@@ -52,6 +55,16 @@ public class DiscoveryDialogController {
     public void OnScanCompletion(List<String> users) {
         listView_Discovery.setItems(FXCollections.observableList(users));
         progressIndicator.setVisible(false);
+    }
+
+    private void ListViewSelected(){
+        listView_Discovery.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue ip, Object oldValue, Object newValue) {
+                button_send.setDisable(false);
+                System.out.println("ip selected= "+(String)newValue);
+            }
+        });
     }
 
 }
