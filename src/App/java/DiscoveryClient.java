@@ -37,10 +37,11 @@ public class DiscoveryClient implements Runnable{
                 try {
                     fromClient = socket.accept();
                     InputStream is = fromClient.getInputStream();
+                    DataInputStream dis = new DataInputStream(is);
                     InputStreamReader isr = new InputStreamReader(is);
                     BufferedReader br = new BufferedReader(isr);
                     String inputMessage = br.readLine();
-                    HandleInputMessage(inputMessage);
+                    HandleInputMessage(inputMessage,br,dis);
 
 
                 } catch (Exception e) {
@@ -72,12 +73,13 @@ public class DiscoveryClient implements Runnable{
         }
 
     }
-    private void HandleInputMessage(String inputMessage) throws IOException {
+    private void HandleInputMessage(String inputMessage, BufferedReader br, DataInputStream dis) throws IOException {
 
         System.out.println("Message received from client is " + inputMessage);
 
 
         if(inputMessage.equals("getname"))
+
         {
             String returnMessage = "unknown";
             returnMessage = Main.name + "\n";
@@ -121,19 +123,51 @@ public class DiscoveryClient implements Runnable{
         }
         else if(inputMessage.equals("filetransfer"))
         {
+            int fileCount = Integer.parseInt(br.readLine());
+            System.out.println("Files Count : " + fileCount);
 
+            for (int count =0; count<fileCount; count++){
+                String fileName = dis.readUTF();
+                int length = Integer.parseInt(fileName.split("\n")[1]);
+                fileName = fileName.split("\n")[0];
+                System.out.println("File Name : " + fileName);
+                System.out.println("Length : " + length);
+                System.out.println("File Data : ");
+                FileOutputStream fos = new FileOutputStream(new File(fileName));
+               /* byte[] item;
+                item = new byte[length];
+                byte temp;
+                for (int i=0; i<length ; i++) {
+                    try {
+                        temp = dis.readByte();
+                        if(temp!='\0')
+                        item[i] = temp;
+                        System.out.println(i);
+                    }catch(EOFException eof){
+                        System.out.println("fuck off EOF");
+                    }
+                }*/
+
+                int received = 0;
+                int c;
+                byte[] buffer = new byte[65536];
+                while (received < length && (c = dis.read(buffer, 0, Math.min(buffer.length, length - received))) > 0)
+                {
+                    fos.write(buffer, 0, c);
+                    fos.flush();
+                    received += c;
+                }
+
+                //fos.write(item);
+                fos.close();
+                System.out.println("\nFile received successfully!!! voila !! :)");
+                //br.readLine();
+            }
         }
         else if(inputMessage.equals("foldertransfer"))
         {
 
         }
     }
-
-    /*public static boolean ServerSocketIsClosed(){
-        if(socket.isClosed()){
-            return true;
-        }
-        return false;
-    }*/
 
 }
