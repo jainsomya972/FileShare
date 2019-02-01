@@ -32,10 +32,13 @@ public class DiscoveryDialogController {
     private List<File> fileToSend;
     private int port=6700;
 
+    private File folder;
+
     @FXML
     public  void initialize(){
         progressIndicator.setVisible(true);
         button_send.setDisable(true);
+        folder = MainController.folder;
         ScanNetwork scan = new ScanNetwork(port,this);
         Thread t = new Thread(scan);
         t.start();
@@ -61,7 +64,10 @@ public class DiscoveryDialogController {
         String receivedMessage = SendFileForConfirmation(selectedIP,message);
 
         if(receivedMessage.equals("yes")){
-            SendFile(selectedIP,fileToSend);
+            if(Main.sendType.equals("files"))
+                SendFile(selectedIP,fileToSend);
+            else
+                SendFolder(selectedIP, fileToSend);
         }
         else{
             System.out.println("Files will not transfer. Denied by user.");
@@ -69,6 +75,8 @@ public class DiscoveryDialogController {
 
 
     }
+
+
 
     public DiscoveryDialogController(){
 
@@ -116,9 +124,6 @@ public class DiscoveryDialogController {
 
                 FileInputStream requestedfile = new FileInputStream(f.getPath());
                 System.out.println("file path: "+f.getPath());
-                //byte[] buffer = new byte[1];
-                //out.write(buffer);
-                //out.flush();
 
                 int count;
                 byte[] buffer = new byte[65536];
@@ -128,37 +133,11 @@ public class DiscoveryDialogController {
                     //System.out.println(buffer);
 
                 }
-                //out.flush();
 
-               /* byte[] buffer = new byte[8192];
-                byte[] buf = new byte[3];
-                String str = "done";  //randomly anything
-                buf = str.getBytes();
-
-
-                int n;
-                while((n =requestedfile.read(buffer)) != -1){
-                    out.write(buffer,0,n);
-                    System.out.println(n);
-                    out.flush();
-                }
-                    //should i close the dataoutputstream here and make a new one each time?
-                out.write(buf,0,3);
-                out.flush();*/
-
-
-                /*while((requestedfile.read(buffer)!=-1)){
-                    out.write(buffer);
-                    System.out.print((char)buffer[0]);
-                    out.flush();
-                }
-                out.flush();*/
                 System.out.println("File transfer completed!! voila! :)");
                 requestedfile.close();
-                //out.close();
+
             }
-            //out.close();
-            //try{Thread.sleep(5000);}catch(Exception e){}
 
             out.close();
             sendToServer.close();
@@ -201,7 +180,76 @@ public class DiscoveryDialogController {
         return "no";
     }
 
-   /* private void SendFile(String receiver,String m){
+
+    private void SendFolder(String receiver,List<File> file_to_send){
+        Socket sendToServer=null;
+        ArrayList<String> relativePaths = getRelativePaths(file_to_send);
+        try {
+            sendToServer = new Socket(receiver,port);
+            //Send the message to the server
+            OutputStream os = sendToServer.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+            DataOutputStream out = new DataOutputStream(sendToServer.getOutputStream());
+            String sendMessage = "foldertransfer\n"+file_to_send.size()+"\n";
+
+            //String sendMessage = f.getName() + "\n"+ f.length() + "\n";
+            bw.write(sendMessage);
+            bw.flush();
+            System.out.println("message: "+sendMessage);
+            for(String p:relativePaths){
+                bw.write(p+"\n");
+                bw.flush();
+                System.out.println(p);
+            }
+
+
+            //PrintStream out = new PrintStream(sendToServer.getOutputStream(), true);
+            for(File f: file_to_send){
+
+                /*sendMessage = String.valueOf(f.length()) + "\n";
+                bw.write(sendMessage);
+                bw.flush();*/
+
+                FileInputStream requestedfile = new FileInputStream(f.getPath());
+                System.out.println("file path: "+f.getPath());
+
+                int count;
+                byte[] buffer = new byte[65536];
+                while ((count = requestedfile.read(buffer)) > 0)
+                {
+                    out.write(buffer, 0, count);
+                    //System.out.println(buffer);
+
+                }
+                out.flush();
+                System.out.println("File transfer completed!! voila! :)");
+                requestedfile.close();
+
+            }
+            System.out.println("Folder transfer complete");
+            out.close();
+            sendToServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private ArrayList<String> getRelativePaths(List<File> f){
+        ArrayList<String> paths = new ArrayList<>();
+        String parentPath = folder.getParent();
+        for(File fi: f){
+            try{
+            paths.add(fi.getCanonicalPath().replace(parentPath,"")+"\n"+fi.length());}
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return paths;
+    }
+
+       /* private void SendFile(String receiver,String m){
         Socket sendToServer=null;
         try {
             sendToServer = new Socket(receiver,port);

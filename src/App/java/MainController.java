@@ -38,6 +38,8 @@ public class MainController {
     @FXML
     private JFXToggleButton toggleButton_discoverable;
 
+    public static File folder;
+
     @FXML
     public void initialize() {
         String imagePath = Paths.get("/App/images/user_image.png").toAbsolutePath().toString();
@@ -78,7 +80,7 @@ public class MainController {
         System.out.println("UploadFolder Clicked!");
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Open Folder");
-        File folder = directoryChooser.showDialog(Main.stage);
+        folder = directoryChooser.showDialog(Main.stage);
         List<String> folder_list = new ArrayList<String>();
         if(folder!=null)
         {
