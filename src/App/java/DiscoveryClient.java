@@ -3,10 +3,12 @@ package App.java;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.stage.DirectoryChooser;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class DiscoveryClient implements Runnable{
 
@@ -14,6 +16,7 @@ public class DiscoveryClient implements Runnable{
     private Socket fromClient;
     private String name;
     private static int port;
+    private File folder;
 
     public DiscoveryClient(int port, String name){
         this.name=name;
@@ -78,9 +81,7 @@ public class DiscoveryClient implements Runnable{
         System.out.println("Message received from client is " + inputMessage);
 
 
-        if(inputMessage.equals("getname"))
-
-        {
+        if (inputMessage.equals("getname")) {
             String returnMessage = "unknown";
             returnMessage = Main.name + "\n";
             //Sending the response back to the client.
@@ -90,9 +91,7 @@ public class DiscoveryClient implements Runnable{
             bw.write(returnMessage);
             System.out.println("Message sent to the client is " + returnMessage);
             bw.flush();
-        }
-        else if(inputMessage.contains("receiveconfirm"))
-        {
+        } else if (inputMessage.contains("receiveconfirm")) {
             String name = inputMessage.split(" ")[1];
             Platform.runLater(new Runnable() {
                 @Override
@@ -102,9 +101,16 @@ public class DiscoveryClient implements Runnable{
                             name + " is sending some Files, do you want to receive it?",
                             ButtonType.YES, ButtonType.NO);
                     alert.showAndWait();
-                    if(alert.getResult() == ButtonType.YES)
-                        returnMessage = "yes" + "\n";
-                    else
+
+                    if (alert.getResult() == ButtonType.YES) {
+                        DirectoryChooser directoryChooser = new DirectoryChooser();
+                        directoryChooser.setTitle("Open Folder");
+                        folder = directoryChooser.showDialog(Main.stage);
+                        if (folder != null) {
+                            returnMessage = "yes" + "\n";
+                        } else
+                            returnMessage = "no" + "\n";
+                    } else
                         returnMessage = "no" + "\n";
                     OutputStream os = null;
                     try {
@@ -120,20 +126,21 @@ public class DiscoveryClient implements Runnable{
                 }
             });
 
-        }
-        else if(inputMessage.equals("filetransfer"))
-        {
+        } else if (inputMessage.equals("filetransfer")) {
             int fileCount = Integer.parseInt(br.readLine());
             System.out.println("Files Count : " + fileCount);
 
-            for (int count =0; count<fileCount; count++){
+            for (int count = 0; count < fileCount; count++) {
                 String fileName = dis.readUTF();
                 int length = Integer.parseInt(fileName.split("\n")[1]);
                 fileName = fileName.split("\n")[0];
                 System.out.println("File Name : " + fileName);
                 System.out.println("Length : " + length);
                 System.out.println("File Data : ");
-                FileOutputStream fos = new FileOutputStream(new File(fileName));
+                File file = new File(folder.getPath() +"/"+ fileName);
+
+                //file.mkdirs();
+                FileOutputStream fos = new FileOutputStream(file);
                /* byte[] item;
                 item = new byte[length];
                 byte temp;
@@ -151,8 +158,7 @@ public class DiscoveryClient implements Runnable{
                 int received = 0;
                 int c;
                 byte[] buffer = new byte[65536];
-                while (received < length && (c = dis.read(buffer, 0, Math.min(buffer.length, length - received))) > 0)
-                {
+                while (received < length && (c = dis.read(buffer, 0, Math.min(buffer.length, length - received))) > 0) {
                     fos.write(buffer, 0, c);
                     fos.flush();
                     received += c;
@@ -163,11 +169,53 @@ public class DiscoveryClient implements Runnable{
                 System.out.println("\nFile received successfully!!! voila !! :)");
                 //br.readLine();
             }
-        }
-        else if(inputMessage.equals("foldertransfer"))
-        {
+        } else if (inputMessage.equals("foldertransfer")) {
+            int fileCount = Integer.parseInt(br.readLine());
+            System.out.println("Files Count : " + fileCount);
+            ArrayList<String> fileNames = new ArrayList<>();
+            ArrayList<Integer> fileLengths = new ArrayList<>();
+            for (int count = 0; count < fileCount; count++) {
+                fileNames.add(br.readLine());
+                fileLengths.add(Integer.parseInt(br.readLine()));
+                System.out.println(count + "  " + fileNames.get(count)+ "  "+fileLengths.get(count));
+            }
 
+            for (int count = 0; count < fileCount; count++) {
+
+                //int length = Integer.parseInt(br.readLine());
+                //fileName = fileName.split("\n")[0];
+                //System.out.println("File Name : " + fileName);
+                //String fileName = dis.readUTF();
+
+                //fileName = fileName.split("\n")[0];
+                int length = fileLengths.get(count);
+                System.out.println("Length : " + length);
+                System.out.println("Store path : " + folder.getPath()+fileNames.get(count));
+                File file = new File(folder.getPath()+fileNames.get(count));
+                String[] paths = file.getPath().split("/");
+                String path = paths[paths.length-1];
+                path = (folder.getPath()+fileNames.get(count)).replace(path,"");
+
+                new File(path).mkdirs();
+                //file.mkdirs();
+                FileOutputStream fos = new FileOutputStream(file);
+
+                int received = 0;
+                int c;
+                byte[] buffer = new byte[65536];
+                while (received < length && (c = dis.read(buffer, 0, Math.min(buffer.length, length - received))) > 0) {
+                    fos.write(buffer, 0, c);
+                    fos.flush();
+                    received += c;
+                }
+
+                fos.close();
+                System.out.println("\nFile received successfully!!! voila !! :)");
+
+            }
+            System.out.print("Folder received successfully");
         }
+
+
     }
-
 }
