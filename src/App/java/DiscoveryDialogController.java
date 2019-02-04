@@ -64,24 +64,22 @@ public class DiscoveryDialogController {
         String receivedMessage = SendFileForConfirmation(selectedIP,message);
 
         if(receivedMessage.equals("yes")){
-            if(Main.sendType.equals("files")) {
-                //SendFile(selectedIP, fileToSend);
-                SendFile sendFile = new SendFile(selectedIP,fileToSend);
-                Thread t = new Thread(sendFile);
-                t.start();
+            if(Main.sendType.equals("files")){
+                button_send.setText("Sending ...");
+                SendFile(selectedIP,fileToSend);
+                button_send.setText("Send");
             }
             else {
-                //SendFolder(selectedIP, fileToSend);
-                SendFolder sendFolder = new SendFolder(selectedIP,fileToSend);
-                Thread t = new Thread(sendFolder);
-                t.start();
+                button_send.setText("Sending ...");
+                SendFolder(selectedIP, fileToSend);
+                button_send.setText("Send");
             }
+
+
         }
         else{
             System.out.println("Files will not transfer. Denied by user.");
         }
-
-
     }
 
 
@@ -105,6 +103,60 @@ public class DiscoveryDialogController {
                 nameSelected=(String)newValue;
             }
         });
+    }
+
+    private void SendFile(String receiver,List<File> file_to_send){
+        Socket sendToServer=null;
+        ArrayList<String> relativePaths = getPaths(file_to_send);
+        try {
+            sendToServer = new Socket(receiver,port);
+            //Send the message to the server
+            OutputStream os = sendToServer.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+            DataOutputStream out = new DataOutputStream(sendToServer.getOutputStream());
+            String sendMessage = "filetransfer\n"+file_to_send.size()+"\n";
+
+            //String sendMessage = f.getName() + "\n"+ f.length() + "\n";
+            bw.write(sendMessage);
+            bw.flush();
+            System.out.println("message: "+sendMessage);
+            for(String p:relativePaths){
+                bw.write(p+"\n");
+                bw.flush();
+                System.out.println(p);
+            }
+
+            //PrintStream out = new PrintStream(sendToServer.getOutputStream(), true);
+            for(File f: file_to_send){
+
+                //sendMessage = f.getName() + "\n"+ f.length() + "\n";
+                //out.writeUTF(sendMessage);
+                //bw.flush();
+
+                FileInputStream requestedfile = new FileInputStream(f.getPath());
+                System.out.println("file path: "+f.getPath());
+
+                int count;
+                byte[] buffer = new byte[65536];
+                while ((count = requestedfile.read(buffer)) > 0)
+                {
+                    out.write(buffer, 0, count);
+                    //System.out.println(buffer);
+
+                }
+
+                System.out.println("File transfer completed!! voila! :)");
+                requestedfile.close();
+
+            }
+
+            out.close();
+            sendToServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private String SendFileForConfirmation(String receiver,String m){
@@ -140,5 +192,105 @@ public class DiscoveryDialogController {
         return "no";
     }
 
+
+    private void SendFolder(String receiver,List<File> file_to_send){
+        Socket sendToServer=null;
+        ArrayList<String> relativePaths = getRelativePaths(file_to_send);
+        try {
+            sendToServer = new Socket(receiver,port);
+            //Send the message to the server
+            OutputStream os = sendToServer.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+            DataOutputStream out = new DataOutputStream(sendToServer.getOutputStream());
+            String sendMessage = "foldertransfer\n"+file_to_send.size()+"\n";
+
+            //String sendMessage = f.getName() + "\n"+ f.length() + "\n";
+            bw.write(sendMessage);
+            bw.flush();
+            System.out.println("message: "+sendMessage);
+            for(String p:relativePaths){
+                bw.write(p+"\n");
+                bw.flush();
+                System.out.println(p);
+            }
+
+
+            //PrintStream out = new PrintStream(sendToServer.getOutputStream(), true);
+            for(File f: file_to_send){
+
+                /*sendMessage = String.valueOf(f.length()) + "\n";
+                bw.write(sendMessage);
+                bw.flush();*/
+
+                FileInputStream requestedfile = new FileInputStream(f.getPath());
+                System.out.println("file path: "+f.getPath());
+
+                int count;
+                byte[] buffer = new byte[65536];
+                while ((count = requestedfile.read(buffer)) > 0)
+                {
+                    out.write(buffer, 0, count);
+                    //System.out.println(buffer);
+
+                }
+                out.flush();
+                System.out.println("File transfer completed!! voila! :)");
+                requestedfile.close();
+
+            }
+            System.out.println("Folder transfer complete");
+            out.close();
+            sendToServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private ArrayList<String> getRelativePaths(List<File> f){
+        ArrayList<String> paths = new ArrayList<>();
+        String parentPath = folder.getParent();
+        for(File fi: f){
+            try{
+            paths.add(fi.getCanonicalPath().replace(parentPath,"")+"\n"+fi.length());}
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return paths;
+    }
+
+    private ArrayList<String> getPaths(List<File> f){
+        ArrayList<String> paths = new ArrayList<>();
+
+        for(File fi: f){
+            try{
+                paths.add(fi.getName()+"\n"+fi.length());}
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return paths;
+    }
+
+       /* private void SendFile(String receiver,String m){
+        Socket sendToServer=null;
+        try {
+            sendToServer = new Socket(receiver,port);
+            //Send the message to the server
+            OutputStream os = sendToServer.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+
+            bw.write(m);
+            bw.flush();
+            System.out.println("Message sent to the server : "+m);
+            sendToServer
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 
 }
