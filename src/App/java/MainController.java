@@ -1,5 +1,6 @@
 package App.java;
 
+import com.jfoenix.controls.JFXSpinner;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,11 +38,17 @@ public class MainController {
     private Button button_send;
     @FXML
     private JFXToggleButton toggleButton_discoverable;
+    @FXML
+    private JFXSpinner receive_progress;
+    @FXML
+    private Label label_sender_name, label_data_size;
 
     public static File folder;
 
     @FXML
     public void initialize() {
+        Main.discoveryClient = new DiscoveryClient(6700,Main.name, receive_progress, label_data_size, label_sender_name);
+        new Thread(Main.discoveryClient).start();
         String imagePath = Paths.get("/App/images/user_image.png").toAbsolutePath().toString();
         Image i = null;
         try {

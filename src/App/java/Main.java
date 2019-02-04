@@ -50,8 +50,8 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
-        discoveryClient = new DiscoveryClient(6700,name);
-        new Thread(discoveryClient).start();
+
+
     }
 
     public static void main(String[] args) {
