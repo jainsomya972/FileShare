@@ -64,10 +64,18 @@ public class DiscoveryDialogController {
         String receivedMessage = SendFileForConfirmation(selectedIP,message);
 
         if(receivedMessage.equals("yes")){
-            if(Main.sendType.equals("files"))
-                SendFile(selectedIP,fileToSend);
-            else
-                SendFolder(selectedIP, fileToSend);
+            if(Main.sendType.equals("files")) {
+                //SendFile(selectedIP, fileToSend);
+                SendFile sendFile = new SendFile(selectedIP,fileToSend);
+                Thread t = new Thread(sendFile);
+                t.start();
+            }
+            else {
+                //SendFolder(selectedIP, fileToSend);
+                SendFolder sendFolder = new SendFolder(selectedIP,fileToSend);
+                Thread t = new Thread(sendFolder);
+                t.start();
+            }
         }
         else{
             System.out.println("Files will not transfer. Denied by user.");
