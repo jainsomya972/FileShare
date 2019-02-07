@@ -192,8 +192,9 @@ public class DiscoveryClient implements Runnable{
                 byte[] buffer = new byte[65536];
                 while (received < length && (c = dis.read(buffer, 0, Math.min(buffer.length, length - received))) > 0) {
                     fos.write(buffer, 0, c);
-                    fos.flush();
+                    //fos.flush();
                     received += c;
+                    receivedLength+=c;
                     if(progress!=null) {
                         Platform.runLater(new Runnable() {
                             @Override
@@ -251,7 +252,7 @@ public class DiscoveryClient implements Runnable{
                 double lengthProgress = 0;
                 while (received < length && (c = dis.read(buffer, 0, Math.min(buffer.length, length - received))) > 0) {
                     fos.write(buffer, 0, c);
-                    fos.flush();
+                    //fos.flush();
                     received += c;
                     receivedLength+=c;
                     if(progress!=null) {

@@ -68,7 +68,7 @@ public class ScanNetwork implements Runnable {
                         String itrip = remainingip + i_string;
                         Socket socket = new Socket();
                         try {
-                            socket.connect(new InetSocketAddress(itrip, port), 8);
+                            socket.connect(new InetSocketAddress(itrip, port), 50);
                             socket.close();
                             list.add(itrip);
                         } catch (IOException e) {

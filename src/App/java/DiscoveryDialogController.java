@@ -5,6 +5,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 
@@ -64,17 +67,31 @@ public class DiscoveryDialogController {
         String receivedMessage = SendFileForConfirmation(selectedIP,message);
 
         if(receivedMessage.equals("yes")){
-            if(Main.sendType.equals("files")){
+            /*if(Main.sendType.equals("files")){
                 button_send.setText("Sending ...");
-                SendFile(selectedIP,fileToSend);
+                //SendFile(selectedIP,fileToSend);
+                //SendFile sendFile = new SendFile(selectedIP, fileToSend);
+                //new Thread(sendFile).start();
                 button_send.setText("Send");
             }
             else {
                 button_send.setText("Sending ...");
-                SendFolder(selectedIP, fileToSend);
+                //SendFolder(selectedIP, fileToSend);
+                //SendFolder sendFolder = new SendFolder(selectedIP, fileToSend);
+                //new Thread(sendFolder).start();
                 button_send.setText("Send");
             }
-
+*/
+            Main.selectedIP = selectedIP;
+            try {
+                Parent root;
+                root = FXMLLoader.load(getClass().getResource("/App/fxml/transfer_window.fxml"));
+                Main.stage.setTitle("FileJet - Home");
+                Main.stage.setScene(new Scene(root, 800, 600));
+                Main.stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
         else{

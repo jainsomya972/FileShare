@@ -107,13 +107,13 @@ public class MainController {
         Parent root = null;
         try {
             root = FXMLLoader.load(getClass().getResource("/App/fxml/discovery.fxml"));
-            Stage primaryStage = new Stage();
-            primaryStage.initStyle(StageStyle.UTILITY);
-            primaryStage.setTitle("Available Devices");
-            primaryStage.setScene(new Scene(root, 350, 450));
+            Main.dialogStage = new Stage();
+            Main.dialogStage.initStyle(StageStyle.UTILITY);
+            Main.dialogStage.setTitle("Available Devices");
+            Main.dialogStage.setScene(new Scene(root, 350, 450));
             /*primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);*/
-            primaryStage.show();
+            Main.dialogStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

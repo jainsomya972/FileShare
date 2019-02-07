@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="493.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.java.TransferWindowController">
+         <children>
+            <Label text="Transfer">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin></Label>
+            <JFXListView prefHeight="246.0" prefWidth="194.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </VBox.margin></JFXListView>
+      <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="613.0">
+         <children>
+                  <ProgressBar fx:id="transfer_progressbar" prefHeight="12.0" prefWidth="285.0" progress="0.4">
+                     <effect>
+                        <Reflection />
+                     </effect>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+                  </ProgressBar>
+            <Label fx:id="transfer_percent_label" text="40%">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="transfer_progress_label" text="10/20 MB">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+            <Pane prefHeight="35.0" prefWidth="71.0" HBox.hgrow="ALWAYS" />
+            <JFXButton fx:id="finish_button" buttonType="RAISED" style="-fx-background-color: #607D8B;" text="Finish" textFill="WHITE" />
+         </children>
+      </HBox>
+         </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+      </VBox>

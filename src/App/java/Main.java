@@ -22,13 +22,14 @@ import java.util.List;
 
 public class Main extends Application {
 
-    public static Stage stage;
+    public static Stage stage, dialogStage;
     public static String name = "Abhay";
     public static String email = "jainsomya972@gmail.com";
     public static String profileImage;
     public static List<File> fileList;
     public static String sendType = "files";// can be files or folder
     public static DiscoveryClient discoveryClient;
+    public static String selectedIP;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
