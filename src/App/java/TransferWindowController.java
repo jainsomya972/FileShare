@@ -54,7 +54,7 @@ public class TransferWindowController {
             Parent root;
             root = FXMLLoader.load(getClass().getResource("/App/fxml/main.fxml"));
             Main.stage.setTitle("FileJet - Home");
-            Main.stage.setScene(new Scene(root));
+            Main.stage.setScene(new Scene(root,1080,600));
             Main.stage.show();
         } catch (IOException e) {
             e.printStackTrace();
