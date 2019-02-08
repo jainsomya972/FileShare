@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.stage.DirectoryChooser;
 
 import java.io.*;
@@ -22,16 +23,19 @@ public class DiscoveryClient implements Runnable{
     private File folder;
     public JFXSpinner progress;
     public Label label_data_size, label_sender_name;
+    public ListView<String> list_files;
     private int received=0;
     private long totalLength = 0;
     private long receivedLength = 0;
+    private int count = 0;
 
-    public DiscoveryClient(int port, String name, JFXSpinner progress, Label label_data_size, Label label_sender_name){
+    public DiscoveryClient(int port, String name, JFXSpinner progress, Label label_data_size, Label label_sender_name, ListView<String> list_files){
         this.name=name;
         this.port = port;
         this.progress = progress;
         this.label_data_size = label_data_size;
         this.label_sender_name = label_sender_name;
+        this.list_files = list_files;
         try{
             socket = new ServerSocket(port);
         }catch (Exception e){
@@ -156,6 +160,7 @@ public class DiscoveryClient implements Runnable{
                     progress.setVisible(true);
                     label_sender_name.setVisible(true);
                     label_data_size.setVisible(true);
+                    list_files.getItems().clear();
                 }
             });
 
@@ -166,23 +171,24 @@ public class DiscoveryClient implements Runnable{
             ArrayList<Integer> fileLengths = new ArrayList<>();
             totalLength=0;
             receivedLength=0;
-            for (int count = 0; count < fileCount; count++) {
+            for (count = 0; count < fileCount; count++) {
                 fileNames.add(br.readLine());
                 fileLengths.add(Integer.parseInt(br.readLine()));
                 totalLength+=fileLengths.get(count);
                 System.out.println(count + "  " + fileNames.get(count)+ "  "+fileLengths.get(count));
             }
 
-            for (int count = 0; count < fileCount; count++) {
-                /*String fileName = dis.readUTF();
-                int length = Integer.parseInt(fileName.split("\n")[1]);
-                fileName = fileName.split("\n")[0];
-                System.out.println("File Name : " + fileName);
-                System.out.println("Length : " + length);
-                System.out.println("File Data : ");
-                File file = new File(folder.getPath() +"/"+ fileName);
-*/
-                //file.mkdirs();
+            for (count = 0; count < fileCount; count++) {
+
+                final int finalcount = count;
+                final String finalFileName = fileNames.get(count);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        list_files.getItems().add(finalFileName);
+                        list_files.scrollTo(finalcount);
+                    }
+                });
                 int length = fileLengths.get(count);
                 File file = new File(folder.getPath()+"/"+fileNames.get(count));
                 FileOutputStream fos = new FileOutputStream(file);
@@ -209,6 +215,13 @@ public class DiscoveryClient implements Runnable{
 
                 //fos.write(item);
                 fos.close();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        String remove = list_files.getItems().remove(finalcount);
+                        list_files.getItems().add(remove + "\ndone!!");
+                    }
+                });
                 System.out.println("\nFile received successfully!!! voila !! :)");
                 //br.readLine();
             }
@@ -219,6 +232,7 @@ public class DiscoveryClient implements Runnable{
                     progress.setVisible(true);
                     label_sender_name.setVisible(true);
                     label_data_size.setVisible(true);
+                    list_files.getItems().clear();
                 }
             });
             int fileCount = Integer.parseInt(br.readLine());
@@ -234,8 +248,17 @@ public class DiscoveryClient implements Runnable{
                 System.out.println(count + "  " + fileNames.get(count)+ "  "+fileLengths.get(count));
             }
 
-            for (int count = 0; count < fileCount; count++) {
+            for (count = 0; count < fileCount; count++) {
 
+                final int finalcount = count;
+                final String finalFileName = fileNames.get(count);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        list_files.getItems().add(finalFileName);
+                        list_files.scrollTo(finalcount);
+                    }
+                });
                 int length = fileLengths.get(count);
                 File file = new File(folder.getPath()+fileNames.get(count));
                 String[] paths = file.getPath().split("/");
@@ -268,12 +291,18 @@ public class DiscoveryClient implements Runnable{
                 }
 
                 fos.close();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        String remove = list_files.getItems().remove(finalcount);
+                        list_files.getItems().add(remove + "\ndone!!");
+                    }
+                });
                 System.out.println("\nFile received successfully!!! voila !! :)");
 
             }
             System.out.print("Folder received successfully");
         }
-
 
     }
     private String GetDataTransferString()

@@ -67,27 +67,12 @@ public class DiscoveryDialogController {
         String receivedMessage = SendFileForConfirmation(selectedIP,message);
 
         if(receivedMessage.equals("yes")){
-            /*if(Main.sendType.equals("files")){
-                button_send.setText("Sending ...");
-                //SendFile(selectedIP,fileToSend);
-                //SendFile sendFile = new SendFile(selectedIP, fileToSend);
-                //new Thread(sendFile).start();
-                button_send.setText("Send");
-            }
-            else {
-                button_send.setText("Sending ...");
-                //SendFolder(selectedIP, fileToSend);
-                //SendFolder sendFolder = new SendFolder(selectedIP, fileToSend);
-                //new Thread(sendFolder).start();
-                button_send.setText("Send");
-            }
-*/
             Main.selectedIP = selectedIP;
             try {
                 Parent root;
                 root = FXMLLoader.load(getClass().getResource("/App/fxml/transfer_window.fxml"));
                 Main.stage.setTitle("FileJet - Home");
-                Main.stage.setScene(new Scene(root, 800, 600));
+                Main.stage.setScene(new Scene(root));
                 Main.stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -290,24 +275,5 @@ public class DiscoveryDialogController {
         }
         return paths;
     }
-
-       /* private void SendFile(String receiver,String m){
-        Socket sendToServer=null;
-        try {
-            sendToServer = new Socket(receiver,port);
-            //Send the message to the server
-            OutputStream os = sendToServer.getOutputStream();
-            OutputStreamWriter osw = new OutputStreamWriter(os);
-            BufferedWriter bw = new BufferedWriter(osw);
-
-            bw.write(m);
-            bw.flush();
-            System.out.println("Message sent to the server : "+m);
-            sendToServer
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 
 }

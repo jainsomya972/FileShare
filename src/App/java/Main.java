@@ -49,7 +49,7 @@ public class Main extends Application {
 
         stage = primaryStage;
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.setScene(new Scene(root, 1080, 600));
         primaryStage.show();
 
 

@@ -47,7 +47,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        Main.discoveryClient = new DiscoveryClient(6700,Main.name, receive_progress, label_data_size, label_sender_name);
+        Main.discoveryClient = new DiscoveryClient(6700,Main.name, receive_progress, label_data_size, label_sender_name, list_Files);
         new Thread(Main.discoveryClient).start();
         String imagePath = Paths.get("/App/images/user_image.png").toAbsolutePath().toString();
         Image i = null;
@@ -93,7 +93,7 @@ public class MainController {
         {
             Main.sendType = "folder";
             Main.fileList = enlistFolder(folder);
-            writeFilePathsToFile(Main.fileList, "files.tmp", folder);
+            //writeFilePathsToFile(Main.fileList, "files.tmp", folder);
             folder_list.add(folder.getName() + ".dir");
             list_Files.setItems(FXCollections.observableList(folder_list));
             button_send.setDisable(false);

@@ -16,7 +16,7 @@
          <VBox.margin>
             <Insets />
          </VBox.margin></Label>
-            <JFXListView prefHeight="246.0" prefWidth="194.0" VBox.vgrow="ALWAYS">
+            <JFXListView fx:id="listview_file" prefHeight="246.0" prefWidth="194.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="10.0" top="10.0" />
          </VBox.margin></JFXListView>
@@ -41,7 +41,7 @@
                </HBox.margin>
             </Label>
             <Pane prefHeight="35.0" prefWidth="71.0" HBox.hgrow="ALWAYS" />
-            <JFXButton fx:id="finish_button" buttonType="RAISED" style="-fx-background-color: #607D8B;" text="Finish" textFill="WHITE" />
+            <JFXButton fx:id="finish_button" buttonType="RAISED" onAction="#Button_Finish_Click" style="-fx-background-color: #607D8B;" text="Finish" textFill="WHITE" />
          </children>
       </HBox>
          </children>

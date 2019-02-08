@@ -13,7 +13,7 @@ public class ScanNetwork implements Runnable {
 
     public List<String> foundiplist;
     public List<String> foundnamelist;
-    private int port;
+    private int port, timeOut = 10;
     DiscoveryDialogController discoveryDialogController;
     //CyclicBarrier barrier;
 
@@ -68,7 +68,7 @@ public class ScanNetwork implements Runnable {
                         String itrip = remainingip + i_string;
                         Socket socket = new Socket();
                         try {
-                            socket.connect(new InetSocketAddress(itrip, port), 50);
+                            socket.connect(new InetSocketAddress(itrip, port), timeOut);
                             socket.close();
                             list.add(itrip);
                         } catch (IOException e) {

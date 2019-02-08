@@ -21,7 +21,7 @@ class FileListCell extends ListCell<String>
     private Label fileName = new Label("File name");
     private Pane pane = new Pane();
     private Button btn = new Button();
-    private ImageView iconView;
+    private ImageView iconView, doneIconView;
 
     public FileListCell(){
         super();
@@ -31,7 +31,17 @@ class FileListCell extends ListCell<String>
         iconView = new ImageView();
         iconView.setFitHeight(35);
         iconView.setFitWidth(35);
-        hbox.getChildren().addAll(iconView,fileName,pane);
+        Image doneImage;
+        try {
+            doneImage = new Image(new FileInputStream(getClass().getResource("/App/images/done.png").getPath()));
+            doneIconView = new ImageView(doneImage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        doneIconView.setFitHeight(30);
+        doneIconView.setFitWidth(30);
+
+        hbox.getChildren().addAll(iconView,fileName,pane,doneIconView);
         hbox.setHgrow(pane, Priority.ALWAYS);
     }
 
@@ -40,6 +50,16 @@ class FileListCell extends ListCell<String>
         super.updateItem(name,empty);
         setText(null);
         setGraphic(null);
+        doneIconView.setVisible(false);
+        try {
+            System.out.println("name : "  + name);
+            if(name.contains("\n")){ //for checking 1 at the end of file name with space
+                doneIconView.setVisible(true);
+                name = name.split("\n")[0];
+            }
+        }
+        catch(Exception e){}
+
         if(name!=null && !empty)
         {
             fileName.setText(name.replace(".dir",""));
@@ -53,6 +73,7 @@ class FileListCell extends ListCell<String>
             }
 
         }
+
     }
 
     private Image getFileIcon(String name) throws FileNotFoundException {

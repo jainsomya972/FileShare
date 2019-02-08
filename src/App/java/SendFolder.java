@@ -1,5 +1,6 @@
 package App.java;
 
+import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -18,22 +19,33 @@ public class SendFolder implements Runnable{
     private ProgressBar progressBar;
     private Label progressLabel;
     private Label percentLabel;
+    private JFXListView<String> listview_files;
 
     private long totalLength = 0;
     private long sendLength = 0;
 
-    public SendFolder(String selectedIP, List<File> file_to_send, ProgressBar progressBar, Label percentLabel,Label progressLabel){
+    public SendFolder(String selectedIP, List<File> file_to_send, ProgressBar progressBar, Label percentLabel,Label progressLabel, JFXListView<String> listview_files){
         this.selectedIP = selectedIP;
         fileToSend = file_to_send;
         this.progressLabel = progressLabel;
         this.progressBar = progressBar;
         this.percentLabel = percentLabel;
+        this.listview_files = listview_files;
     }
 
     private void SendFolderMethod(String receiver, List<File> file_to_send){
         Socket sendToServer=null;
         ArrayList<String> relativePaths = getRelativePaths(file_to_send);
         try {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    listview_files.getItems().clear();
+                    if(fileToSend.size()>100)
+                        listview_files.getItems().add(folder.getName()+".dir");
+
+                }
+            });
             sendToServer = new Socket(receiver,port);
             //Send the message to the server
             OutputStream os = sendToServer.getOutputStream();
@@ -52,13 +64,20 @@ public class SendFolder implements Runnable{
                 System.out.println(p);
             }
 
-
+            int filecount = 0;
             //PrintStream out = new PrintStream(sendToServer.getOutputStream(), true);
             for(File f: file_to_send){
 
-                /*sendMessage = String.valueOf(f.length()) + "\n";
-                bw.write(sendMessage);
-                bw.flush();*/
+                final int finalFileCount = filecount;
+                final String finalFileName = f.getName();
+                if(file_to_send.size()<=100)
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            listview_files.getItems().add(finalFileName);
+                            listview_files.scrollTo(finalFileCount);
+                        }
+                    });
 
                 FileInputStream requestedfile = new FileInputStream(f.getPath());
                 System.out.println("file path: "+f.getPath());
@@ -73,18 +92,24 @@ public class SendFolder implements Runnable{
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            //label_sender_name.setText("Receiving from " + senderName + " ...");
-                            //label_data_size.setText(GetDataTransferString());
                             progressLabel.setText(GetDataTransferString());
                             progressBar.setProgress(sendLength/(double)totalLength);
-                            percentLabel.setText((sendLength/(double)totalLength)*100 + " %");
+                            percentLabel.setText(String.format("%.2f",(sendLength/(double)totalLength)*100) + " %");
                         }
                     });
                 }
                 out.flush();
+                if(file_to_send.size()<=100)
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            String remove = listview_files.getItems().remove(finalFileCount);
+                            listview_files.getItems().add(remove  + "\ndone");
+                        }
+                    });
                 System.out.println("File transfer completed!! voila! :)");
                 requestedfile.close();
-
+                filecount++;
             }
             System.out.println("Folder transfer complete");
             out.close();
