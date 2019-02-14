@@ -37,7 +37,7 @@ public class MainController {
     @FXML
     private Button button_send;
     @FXML
-    private JFXToggleButton toggleButton_discoverable;
+    private ToggleButton toggleButton_discoverable;
     @FXML
     private JFXSpinner receive_progress;
     @FXML
@@ -60,6 +60,20 @@ public class MainController {
         }
         label_username.setText(Main.name);
         list_Files.setCellFactory(param -> new FileListCell());
+    }
+
+    @FXML
+    private void Button_Settings_Click(ActionEvent event){
+        System.out.println("settings clicked!");
+        try {
+            Parent root;
+            root = FXMLLoader.load(getClass().getResource("/App/fxml/settings.fxml"));
+            Main.stage.setTitle("FileJet - Settings");
+            Main.stage.setScene(new Scene(root, Main.stage.getWidth(), Main.stage.getHeight()));
+            Main.stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

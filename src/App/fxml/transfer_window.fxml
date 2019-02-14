@@ -2,15 +2,14 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXProgressBar?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="493.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.java.TransferWindowController">
+<VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.java.TransferWindowController">
          <children>
             <Label text="Transfer">
          <VBox.margin>
@@ -22,14 +21,11 @@
          </VBox.margin></JFXListView>
       <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="613.0">
          <children>
-                  <ProgressBar fx:id="transfer_progressbar" prefHeight="12.0" prefWidth="285.0" progress="0.4">
-                     <effect>
-                        <Reflection />
-                     </effect>
+                  <JFXProgressBar fx:id="transfer_progressbar" prefHeight="12.0" prefWidth="285.0" progress="0.4">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
-                  </ProgressBar>
+                  </JFXProgressBar>
             <Label fx:id="transfer_percent_label" text="40%">
                <HBox.margin>
                   <Insets left="10.0" />

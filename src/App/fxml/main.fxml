@@ -20,7 +20,7 @@
 
 <AnchorPane fx:id="anchorPane_base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.java.MainController">
    <children>
-      <HBox layoutX="47.0" layoutY="17.0" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #263238;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox layoutX="47.0" layoutY="17.0" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #607D8B;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Circle fx:id="circle_userImage" fill="#78909c" radius="24.0" stroke="BLACK" strokeType="INSIDE">
                <HBox.margin>
@@ -35,7 +35,7 @@
                   <Insets left="10.0" top="18.0" />
                </HBox.margin>
             </Label>
-            <HBox alignment="TOP_RIGHT" AnchorPane.rightAnchor="0.0" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_RIGHT" AnchorPane.rightAnchor="0.0" HBox.hgrow="ALWAYS">
                <children>
                   <JFXButton ripplerFill="WHITE" style="-fx-background-color: transparent;" text=" ">
                      <graphic>
@@ -46,7 +46,7 @@
                         </ImageView>
                      </graphic>
                      <HBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </HBox.margin>
                      <font>
                         <Font size="1.0" />
@@ -55,9 +55,9 @@
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton ripplerFill="WHITE" style="-fx-background-color: transparent;" text=" ">
+                  <JFXButton onAction="#Button_Settings_Click" ripplerFill="WHITE" style="-fx-background-color: transparent;" text=" ">
                      <HBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </HBox.margin>
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -73,18 +73,10 @@
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </padding>
                   </JFXButton>
-                  <Label minWidth="130.0" text="Discoverable" textFill="WHITE">
+                  <JFXToggleButton fx:id="toggleButton_discoverable" onAction="#ToggleButton_Discoverable_Click" text="Discoverable" textFill="WHITE">
                      <font>
-                        <Font size="19.0" />
+                        <Font size="15.0" />
                      </font>
-                     <HBox.margin>
-                        <Insets right="11.0" top="23.0" />
-                     </HBox.margin>
-                  </Label>
-                  <JFXToggleButton fx:id="toggleButton_discoverable" onAction="#ToggleButton_Discoverable_Click" selected="true" toggleColor="#546e7a" toggleLineColor="#78909c">
-                     <HBox.margin>
-                        <Insets right="10.0" top="6.0" />
-                     </HBox.margin>
                   </JFXToggleButton>
                </children>
             </HBox>
@@ -92,45 +84,45 @@
       </HBox>
       <GridPane layoutX="14.0" layoutY="210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="332.0" minWidth="10.0" prefWidth="320.0" />
-          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="332.0" minWidth="10.0" prefWidth="240.0" />
+          <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <JFXListView fx:id="list_Files" depth="3" style="-fx-background-color: transparent; -fx-selection-bar: #CFD8DC#CFD8DC;" verticalGap="3.0" GridPane.columnIndex="1">
+            <JFXListView fx:id="list_Files" depth="3" style="-fx-background-color: transparent; -fx-selection-bar: #CFD8DC#CFD8DC;" verticalGap="3.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </JFXListView>
             <VBox>
                <children>
-                  <JFXButton buttonType="RAISED" layoutX="177.0" layoutY="107.0" onAction="#Button_UploadFiles_Click" prefHeight="73.0" prefWidth="299.0" style="-fx-background-color: #CFD8DC;" text="Upload Files" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                  <JFXButton buttonType="RAISED" layoutX="177.0" layoutY="107.0" onAction="#Button_UploadFiles_Click" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #CFD8DC;" text="Upload Files" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                      <graphic>
-                        <ImageView fitHeight="61.0" fitWidth="115.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/files.png" />
                            </image>
                         </ImageView>
                      </graphic>
                      <font>
-                        <Font name="System Bold" size="16.0" />
+                        <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="10.0" layoutY="89.0" onAction="#Button_UploadFolder_Click" prefHeight="73.0" prefWidth="294.0" style="-fx-background-color: #CFD8DC;" text="Upload Folder" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="89.0">
+                  <JFXButton buttonType="RAISED" layoutX="10.0" layoutY="89.0" onAction="#Button_UploadFolder_Click" prefHeight="43.0" prefWidth="200.0" style="-fx-background-color: #CFD8DC;" text="Upload Folder" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="89.0">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="14.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="61.0" fitWidth="115.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/folder.png" />
                            </image>
                         </ImageView>
                      </graphic>
                      <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </JFXButton>
                   <Label fx:id="label_sender_name" text="Receiving from abhay ..." visible="false">
@@ -149,20 +141,20 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <JFXSpinner fx:id="receive_progress" prefHeight="117.0" prefWidth="320.0" progress="0.0" visible="false">
+                  <JFXSpinner fx:id="receive_progress" prefHeight="117.0" prefWidth="200.0" progress="0.0" visible="false">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
                   </JFXSpinner>
                   <Pane prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <JFXButton fx:id="button_send" buttonType="RAISED" disable="true" layoutX="225.0" layoutY="373.0" onAction="#Button_Send_Click" prefHeight="48.0" prefWidth="285.0" style="-fx-background-color: #607D8B;" text="SEND" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                  <JFXButton fx:id="button_send" buttonType="RAISED" layoutX="225.0" layoutY="373.0" onAction="#Button_Send_Click" prefHeight="48.0" prefWidth="200.0" style="-fx-background-color: #607D8B;" text="SEND" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="29.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/App/images/paper_plane.png" />
+                              <Image url="@../images/paper_plane.png" />
                            </image>
                         </ImageView>
                      </graphic>

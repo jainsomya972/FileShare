@@ -1,14 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="App.java.SettingsController"
-            prefHeight="400.0" prefWidth="600.0">
 
-</AnchorPane>
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.java.SettingsController">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #607D8B;">
+         <children>
+            <JFXButton onAction="#Button_Back_Click" ripplerFill="WHITE" style="-fx-background-color: transparent;" text=" ">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/back.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="1.0" />
+               </font>
+               <padding>
+                  <Insets bottom="2.0" left="7.0" right="2.0" top="2.0" />
+               </padding>
+            </JFXButton>
+            <Label fx:id="label_username" prefHeight="30.0" prefWidth="310.0" text="Settings" textFill="WHITE">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+            <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <JFXButton ripplerFill="WHITE" style="-fx-background-color: transparent;" text=" ">
+               <graphic>
+                  <ImageView fitHeight="38.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/history.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="1.0" />
+               </font>
+               <padding>
+                  <Insets bottom="2.0" left="7.0" right="2.0" top="2.0" />
+               </padding>
+            </JFXButton>
+         </children>
+      </HBox>
+      <GridPane prefHeight="90.0" prefWidth="679.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="100.0" prefWidth="300.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Request Timeout (ms) " />
+            <JFXSlider max="130.0" min="5.0" snapToTicks="true" GridPane.columnIndex="1" />
+            <Label text="Name" GridPane.rowIndex="1" />
+            <Label text="Email" GridPane.rowIndex="2" />
+            <JFXTextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <JFXTextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </VBox.margin>
+      </GridPane>
+   </children>
+</VBox>
