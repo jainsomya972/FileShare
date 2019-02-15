@@ -72,7 +72,7 @@ public class DiscoveryDialogController {
                 Parent root;
                 root = FXMLLoader.load(getClass().getResource("/App/fxml/transfer_window.fxml"));
                 Main.stage.setTitle("FileJet - Home");
-                Main.stage.setScene(new Scene(root, Main.stage.getWidth(), Main.stage.getHeight()));
+                Main.stage.setScene(new Scene(root));
                 Main.stage.show();
             } catch (IOException e) {
                 e.printStackTrace();

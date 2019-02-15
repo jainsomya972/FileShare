@@ -26,11 +26,11 @@ class FileListCell extends ListCell<String>
     public FileListCell(){
         super();
         btn.setText("remove");
-        fileName.setFont(Font.font(12));
-        fileName.setPadding(new Insets(5,0,0,10));
+        fileName.setFont(Font.font(16));
+        fileName.setPadding(new Insets(0,0,0,10));
         iconView = new ImageView();
-        iconView.setFitHeight(27);
-        iconView.setFitWidth(27);
+        iconView.setFitHeight(35);
+        iconView.setFitWidth(35);
         Image doneImage;
         try {
             doneImage = new Image(new FileInputStream(getClass().getResource("/App/images/done.png").getPath()));
@@ -38,8 +38,8 @@ class FileListCell extends ListCell<String>
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        doneIconView.setFitHeight(25);
-        doneIconView.setFitWidth(25);
+        doneIconView.setFitHeight(30);
+        doneIconView.setFitWidth(30);
 
         hbox.getChildren().addAll(iconView,fileName,pane,doneIconView);
         hbox.setHgrow(pane, Priority.ALWAYS);
